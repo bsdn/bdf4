@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bdf="http://www.bstek.com/bdf/schema"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.bstek.com/bdf/schema http://www.bstek.com/dorado/schema/bdf4.0.xsd ">
+
+	<bean parent="dorado.dataConfigLoader">
+		<property name="configLocation" value="${model.root}/*.model.xml" />
+	</bean>
+
+    <bean parent="dorado.viewConfigFactoryRegister">
+        <property name="viewNamePattern" value="**" />
+        <property name="viewConfigFactory">
+            <bean parent="dorado.xmlViewConfigDefinitionFactory">
+                <property name="pathPrefix" value="${view.root}" />
+            </bean>
+        </property>
+    </bean>
+    
+    <!--
+    对于使用dorado-touch的项目，上面的配置应改为...
+    <bean parent="dorado.viewConfigFactoryRegister">
+        <property name="viewNamePattern" value="**" />
+        <property name="viewConfigFactory">
+            <bean parent="dorado.dualPlatformXmlViewConfigDefinitionFactory">
+                <property name="pathPrefix" value="${view.root}" />
+            </bean>
+        </property>
+    </bean>
+    -->
+
+	<bean parent="dorado.packagesConfigLoader">
+		<property name="configLocation" value="home:packages-config.xml" />
+	</bean>
+</beans>

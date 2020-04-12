@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <Button>
+      <ClientEvent name="onClick">dorado.MessageBox.alert(self.get('caption'));&#xD;
+</ClientEvent>
+      <Property name="caption">hello</Property>
+    </Button>
+  </View>
+</ViewConfig>

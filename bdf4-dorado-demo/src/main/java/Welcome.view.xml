@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <View layout="Anchor"  title="dorado欢迎">
+   <Button>
+        <Property name="caption">hello</Property>
+        <ClientEvent name="onClick">dorado.MessageBox.alert(self.get('caption'));</ClientEvent>
+      </Button>
+  </View>
+  
+</ViewConfig>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds"
+	debug="false">
+	<contextName>default</contextName>
+	<!-- 日志级别变更穿透 -->
+	<contextListener
+		class="ch.qos.logback.classic.jul.LevelChangePropagator" />
+	<!-- drop duplicate message是用来过滤重复日志的 -->
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>{"service_name":"${log.service_name}","podName":"${log.podName}","containerName":"${log.containerName}","recordTime":"%date{YYYY-MM-dd HH:mm:ss SSS}","level":"%level","remoteIP":"%X{remoteIP}","message":"%logger-%msg","hostname":"%X{hostname}","serviceCode":"${log.serviceCode}","deptCode":"${log.deptCode}"}%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- <appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender"> 
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"> <Pattern>[%d{yyyy-MM-dd 
+		HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern> 
+		</encoder> </appender> -->
+
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.file.path}/${log.podName}-${log.containerName}.log</file>
+		<append>true</append>
+		<!-- set immediateFlush to false for much higher logging throughput -->
+		<immediateFlush>true</immediateFlush>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${log.file.path}/${log.podName}-${log.containerName}.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+
+			<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<maxHistory>${max.history:-30}</maxHistory>
+			<!--<totalSizeCap>3GB</totalSizeCap> -->
+
+		</rollingPolicy>
+
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
+			by default -->
+		<encoder>
+	        <pattern>{"service_name":"${log.service_name}","podName":"${log.podName}","containerName":"${log.containerName}","recordTime":"%date{YYYY-MM-dd HH:mm:ss SSS}","level":"%level","remoteIP":"%X{remoteIP}","message":"%msg","hostname":"%X{hostname}","serviceCode":"${log.serviceCode}","deptCode":"${log.deptCode}"}%n
+			</pattern>
+		</encoder>
+	<filter class="ch.qos.logback.classic.filter.LevelFilter"> 
+            <level>INFO</level>  
+            <onMatch>ACCEPT</onMatch>  
+            <onMismatch>DENY</onMismatch>  
+        </filter>
+	</appender>
+
+
+	<appender name="WARN_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.file.path}/${log.podName}-${log.containerName}-warn.log</file>
+		<append>true</append>
+		<!-- set immediateFlush to false for much higher logging throughput -->
+		<immediateFlush>true</immediateFlush>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${log.file.path}/${log.podName}-${log.containerName}-warn.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+
+			<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<maxHistory>${max.history:-30}</maxHistory>
+			<!--<totalSizeCap>3GB</totalSizeCap> -->
+
+		</rollingPolicy>
+
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
+			by default -->
+		<encoder>
+	        <pattern>{"service_name":"${log.service_name}","podName":"${log.podName}","containerName":"${log.containerName}","recordTime":"%date{YYYY-MM-dd HH:mm:ss SSS}","level":"%level","remoteIP":"%X{remoteIP}","message":"%msg","hostname":"%X{hostname}","serviceCode":"${log.serviceCode}","deptCode":"${log.deptCode}"}%n
+			</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"> 
+            <level>WARN</level>  
+            <onMatch>ACCEPT</onMatch>  
+            <onMismatch>DENY</onMismatch>  
+        </filter>
+	</appender>
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="WARN_FILE" />
+	</root>
+</configuration>
